@@ -1,0 +1,148 @@
+/* Navbar.css */
+
+:root {
+  --bg-dark: #1e293b;
+  --teal: #14b8a6;
+  --teal-hover: #0d9488;
+  --radius: 0.375rem;
+}
+
+body{
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color:black;
+}
+
+
+/* 🔒 Header Background */
+.job-portal-header {
+  background-color: var(--bg-dark);
+  position: relative;
+  z-index: 1000;
+  
+}
+
+/* 🔖 Logo */
+.job-portal-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.job-portal-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* 🟦 Buttons */
+.btn-teal {
+  background-color: var(--teal);
+  color: white;
+  border-radius: var(--radius);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-teal:hover {
+  background-color: var(--teal-hover);
+}
+
+/* 🍔 Hamburger */
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger-icon {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: white;
+  position: relative;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background-color: white;
+  left: 0;
+  transition: transform 0.3s ease;
+}
+
+.hamburger-icon::before {
+  top: -8px;
+}
+
+.hamburger-icon::after {
+  top: 8px;
+}
+
+/* 📱 Mobile Menu */
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-dark);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.mobile-menu .nav-links {
+  list-style: none;
+  padding: 0;
+}
+
+.mobile-menu .nav-link {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+/* 🏁 Hero Section */
+.hero-section {
+  background-color: #0f172a;
+  color: white;
+  padding: 4rem 1rem;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #cbd5e1;
+  max-width: 600px;
+}
+
+/* 📱 Responsive Tweaks */
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+}
+
