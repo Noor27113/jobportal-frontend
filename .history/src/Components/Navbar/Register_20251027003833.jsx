@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import user from '../../assets/user.svg';
-import registerUser from '../../api/Registeruser';  // ✅ fixed import
-import verifyOtp from '../../api/verifyotp';        // ✅ consistent casing
+import registerUser from '../../api/registerUser';
+import verifyOtp from '../../api/verifyOtp';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ export default function Register() {
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // 🔍 Validation logic
   const validate = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Name is required';
@@ -40,12 +41,14 @@ export default function Register() {
     return newErrors;
   };
 
+  // 🔄 Input change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrorMsg('');
   };
 
+  // 🚀 Registration submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -77,6 +80,7 @@ export default function Register() {
     }
   };
 
+  // 🔐 OTP verification handler
   const handleOtpVerify = async () => {
     setLoading(true);
     try {
@@ -96,10 +100,12 @@ export default function Register() {
   return (
     <div className="register-page">
       <div className="register-container">
+        {/* 🖼️ Illustration */}
         <div className="illustration-section">
           <img src={user} alt="Registration Illustration" className="illustration-image" />
         </div>
 
+        {/* 📝 Form Section */}
         <div className="form-section">
           <h2 className="form-title">Registration Form</h2>
           <form onSubmit={handleSubmit}>
@@ -123,6 +129,7 @@ export default function Register() {
             </button>
           </form>
 
+          {/* 🔐 OTP Section */}
           {showOtpInput && (
             <div className="otp-section">
               <label htmlFor="otp">Enter OTP:</label>

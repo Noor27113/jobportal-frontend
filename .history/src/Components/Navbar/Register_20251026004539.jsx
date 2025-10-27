@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import user from '../../assets/user.svg';
-import registerUser from '../../api/Registeruser';  // ✅ fixed import
-import verifyOtp from '../../api/verifyotp';        // ✅ consistent casing
+import { registerUser } from '../../api/RegisterUser'; // ✅ Named export
+import verifyOtp from '../../api/verifyOtp'; // ✅ Default export
 
 export default function Register() {
   const navigate = useNavigate();
@@ -58,13 +58,12 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const res = await registerUser(
-        formData.name,
-        formData.email,
-        formData.phone,
-        formData.password
-      );
+      const payload = {
+        email: formData.email,
+        password: formData.password,
+      };
 
+      const res = await registerUser(payload);
       if (res.message === 'OTP sent to email') {
         setShowOtpInput(true);
       } else {

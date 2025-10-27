@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import loginIllustration from '../../assets/login.svg';
-import loginUser from '../../api/Loginuser'; // ✅ Correct import
+import login from '../../assets/login.svg';
+import  Loginuser  from '../../api/Loginuser';
+im
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,10 +14,7 @@ export default function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value.trim() // ✅ Trim whitespace
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validate = () => {
@@ -36,8 +35,6 @@ export default function Login() {
     try {
       setLoading(true);
       const res = await loginUser(formData.email, formData.password);
-      console.log('🔐 Login response:', res);
-
       if (res.token) {
         localStorage.setItem('token', res.token);
         navigate('/');
@@ -45,7 +42,6 @@ export default function Login() {
         setError(res.message || 'Login failed');
       }
     } catch (err) {
-      console.error('❌ Login error:', err.message);
       setError('Invalid credentials or unverified account');
     } finally {
       setLoading(false);
@@ -56,7 +52,7 @@ export default function Login() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-illustration-section">
-          <img src={loginIllustration} alt="Login Illustration" className="login-illustration" />
+          <img src={login} alt="Login Illustration" className="login-illustration" />
         </div>
 
         <div className="login-form-section">
