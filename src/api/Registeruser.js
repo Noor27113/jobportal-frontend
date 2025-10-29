@@ -1,4 +1,4 @@
-import { API_BASE } from './config';
+import { API_BASE } from './Config';
 
 const registerUser = async (name, email, phone, password) => {
   try {
@@ -10,13 +10,13 @@ const registerUser = async (name, email, phone, password) => {
       body: JSON.stringify({ name, email, phone, password })
     });
 
+    const data = await response.json(); // ✅ only called once
+
     if (!response.ok) {
-      const errorData = await response.json();
-      console.warn('Registration failed:', errorData.message || 'Unknown error');
-      return { error: errorData.message || 'Registration failed' };
+      console.warn('Registration failed:', data.message || 'Unknown error');
+      return { error: data.message || 'Registration failed' };
     }
 
-    const data = await response.json();
     return data;
   } catch (err) {
     console.error('Network or server error during registration:', err.message);
