@@ -10,13 +10,13 @@ const verifyOtp = async (email, otp) => {
       body: JSON.stringify({ email, otp })
     });
 
+    const data = await response.json(); // ✅ only once
+
     if (!response.ok) {
-      const errorData = await response.json();
-      console.warn('OTP verification failed:', errorData.message || 'Unknown error');
-      return { error: errorData.message || 'OTP verification failed' };
+      console.warn('OTP verification failed:', data.message || 'Unknown error');
+      return { error: data.message || 'OTP verification failed' };
     }
 
-    const data = await response.json();
     return data;
   } catch (err) {
     console.error('Network or server error during OTP verification:', err.message);
