@@ -1,4 +1,6 @@
-import { API_BASE } from './config';
+
+
+import { API_BASE } from './Config';
 
 const loginUser = async (email, password) => {
   try {
