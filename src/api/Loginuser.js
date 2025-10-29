@@ -1,6 +1,8 @@
+import { API_BASE } from './config';
+
 const loginUser = async (email, password) => {
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch(`${API_BASE}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -17,7 +19,7 @@ const loginUser = async (email, password) => {
 
     return { success: true, ...data };
   } catch (err) {
-    console.error('❌ Network/server error during login:', err.message);
+    console.error('Network/server error during login:', err.message);
     return { success: false, message: 'Unable to connect to server' };
   }
 };

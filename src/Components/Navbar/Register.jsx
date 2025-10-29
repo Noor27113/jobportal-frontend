@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import user from '../../assets/user.svg';
-import registerUser from '../../api/Registeruser';  // ✅ fixed import
-import verifyOtp from '../../api/verifyotp';        // ✅ consistent casing
+import registerUser from '../../api/Registeruser';  
+import verifyOtp from '../../api/verifyotp';        
 
 export default function Register() {
   const navigate = useNavigate();
