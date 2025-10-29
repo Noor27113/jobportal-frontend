@@ -1,8 +1,8 @@
-import { API_BASE } from './Config';
+import { API_BASE } from './config';
 
 const registerUser = async (name, email, phone, password) => {
   try {
-    const response = await fetch(`${API_BASE}/api/auth/register`, {
+    const response = await fetch(`${API_BASE}/api/auth/Registeruser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

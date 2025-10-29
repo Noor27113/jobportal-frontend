@@ -1,10 +1,10 @@
 
 
-import { API_BASE } from './Config';
+import { API_BASE } from './config';
 
 const loginUser = async (email, password) => {
   try {
-    const response = await fetch(`${API_BASE}/api/auth/login`, {
+    const response = await fetch(`${API_BASE}/api/auth/Login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -1,8 +1,8 @@
-import { API_BASE } from './Config';
+import { API_BASE } from './config';
 
 const verifyOtp = async (email, otp) => {
   try {
-    const response = await fetch(`${API_BASE}/api/auth/verify-otp`, {
+    const response = await fetch(`${API_BASE}/api/auth/verifyotp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
