@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import loginIllustration from '../../assets/login.svg';
-import loginUser from '../../api/Loginuser'; // ✅ Correct import
+import loginUser from '../../api/Loginuser';
+
 
 export default function Login() {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value.trim() // ✅ Trim whitespace
+      [name]: value.trim()
     }));
+    setError('');
+    setSuccessMsg('');
   };
 
   const validate = () => {
@@ -33,22 +35,16 @@ export default function Login() {
       return;
     }
 
-    try {
-      setLoading(true);
-      const res = await loginUser(formData.email, formData.password);
-      console.log('🔐 Login response:', res);
+    setLoading(true);
+    const res = await loginUser(formData.email, formData.password);
+    setLoading(false);
 
-      if (res.token) {
-        localStorage.setItem('token', res.token);
-        navigate('/');
-      } else {
-        setError(res.message || 'Login failed');
-      }
-    } catch (err) {
-      console.error('❌ Login error:', err.message);
-      setError('Invalid credentials or unverified account');
-    } finally {
-      setLoading(false);
+    if (res.success) {
+      setError('');
+      setSuccessMsg('✅ Logged in successfully');
+    } else {
+      setSuccessMsg('');
+      setError(res.message || 'Login failed');
     }
   };
 
@@ -82,11 +78,15 @@ export default function Login() {
                 required
               />
             </div>
+
             {error && <div className="login-error">{error}</div>}
+            {successMsg && <div className="login-success">{successMsg}</div>}
+
             <div className="login-links">
               <a href="#" className="login-link">Forgot Password?</a>
               <a href="/register" className="login-link">Register now</a>
             </div>
+
             <button type="submit" className="login-submit-btn" disabled={loading}>
               {loading ? 'Signing in...' : 'SIGN IN'}
             </button>

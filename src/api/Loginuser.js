@@ -1,27 +1,39 @@
-import { API_BASE } from '../config';
+// /src/api/loginUser.js
+
+import { BASE_URL } from '../config';
 
 const loginUser = async (email, password) => {
   try {
-    const response = await fetch(`${API_BASE}/api/auth/login`, {
+    const response = await fetch(`${BASE_URL}/api/auth/login`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email.trim(),
+        password: password.trim()
+      })
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get('content-type');
+    const data = contentType?.includes('application/json') ? await response.json() : null;
 
     if (!response.ok) {
-      console.warn('🔐 Login failed:', data.message || 'Unknown error');
-      return { success: false, message: data.message || 'Login failed' };
+      return {
+        success: false,
+        message: data?.message || 'Login failed'
+      };
     }
 
-    return { success: true, ...data };
+    return {
+      success: true,
+      ...data
+    };
   } catch (err) {
-    console.error('Network/server error during login:', err.message);
-    return { success: false, message: 'Unable to connect to server' };
+    return {
+      success: false,
+      message: 'Unable to connect to server'
+    };
   }
 };
 
 export default loginUser;
+

@@ -1,26 +1,39 @@
-import { API_BASE } from '../config';
+// /src/api/registerUser.js
+
+import { BASE_URL } from '../config';
+const BASE_URL = 'https://jobportal-backend-production-de8e.up.railway.app'; // Replace with your actual Railway backend URL
 
 const registerUser = async (name, email, phone, password) => {
   try {
-    const response = await fetch(`${API_BASE}/api/auth/registeruser`, {
+    const response = await fetch(`${BASE_URL}/api/auth/register`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, email, phone, password })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        password: password.trim()
+      })
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get('content-type');
+    const data = contentType?.includes('application/json') ? await response.json() : null;
 
     if (!response.ok) {
-      console.warn('Registration failed:', data.message || 'Unknown error');
-      return { error: data.message || 'Registration failed' };
+      return {
+        success: false,
+        message: data?.message || 'Registration failed'
+      };
     }
 
-    return data;
+    return {
+      success: true
+    };
   } catch (err) {
-    console.error('Network or server error during registration:', err.message);
-    return { error: 'Unable to connect to server' };
+    return {
+      success: false,
+      message: 'Unable to connect to server'
+    };
   }
 };
 

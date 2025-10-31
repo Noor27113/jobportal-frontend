@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import user from '../../assets/user.svg';
-import registerUser from '../../api/Registeruser';  
-import verifyOtp from '../../api/verifyotp';        
+import registerUser from '../../api/registerUser';
+import verifyOtp from '../../api/verifyotp';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function Register() {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -21,35 +21,39 @@ export default function Register() {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const validate = () => {
+  useEffect(() => {
+    if (success) {
+      navigate('/login'); // ✅ Redirect after OTP success
+    }
+  }, [success, navigate]);
+
+  const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    const { name, email, phone, password, confirmPassword } = formData;
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    else if (!emailRegex.test(formData.email)) newErrors.email = 'Enter a valid email address';
-
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!formData.phone.trim()) newErrors.phone = 'Mobile number is required';
-    else if (!phoneRegex.test(formData.phone)) newErrors.phone = 'Enter a valid 10-digit mobile number';
-
-    if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (!name.trim()) newErrors.name = 'Name is required';
+    if (!email.trim()) newErrors.email = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = 'Invalid email format';
+    if (!phone.trim()) newErrors.phone = 'Phone is required';
+    else if (!/^[6-9]\d{9}$/.test(phone)) newErrors.phone = 'Invalid phone number';
+    if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
+    if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
 
     return newErrors;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
     setErrorMsg('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length) {
       setErrors(validationErrors);
       return;
     }
@@ -57,39 +61,37 @@ export default function Register() {
     setErrors({});
     setLoading(true);
 
-    try {
-      const res = await registerUser(
-        formData.name,
-        formData.email,
-        formData.phone,
-        formData.password
-      );
+    const res = await registerUser(
+      formData.name,
+      formData.email,
+      formData.phone,
+      formData.password
+    );
 
-      if (res.message === 'OTP sent to email') {
-        setShowOtpInput(true);
-      } else {
-        setErrorMsg(res.message || 'Registration failed');
-      }
-    } catch (err) {
-      setErrorMsg('Server error during registration');
-    } finally {
-      setLoading(false);
+    setLoading(false);
+
+    if (res.success) {
+      setShowOtpInput(true); // ✅ Show OTP input
+    } else {
+      setErrorMsg(res.message); // ✅ Show backend error like "Email already registered"
     }
   };
 
   const handleOtpVerify = async () => {
+    if (!otp.trim()) {
+      setErrorMsg('OTP is required');
+      return;
+    }
+
     setLoading(true);
-    try {
-      const res = await verifyOtp(formData.email, otp);
-      if (res.message === 'Email verified successfully') {
-        navigate('/login');
-      } else {
-        setErrorMsg(res.message || 'OTP verification failed');
-      }
-    } catch (err) {
-      setErrorMsg('Server error during OTP verification');
-    } finally {
-      setLoading(false);
+    const res = await verifyOtp(formData.email, otp);
+    setLoading(false);
+
+    if (res.success) {
+      setErrorMsg('');
+      setSuccess(true); // ✅ triggers redirect via useEffect
+    } else {
+      setErrorMsg(res.message || 'OTP verification failed');
     }
   };
 
@@ -103,21 +105,27 @@ export default function Register() {
         <div className="form-section">
           <h2 className="form-title">Registration Form</h2>
           <form onSubmit={handleSubmit}>
-            {['name', 'email', 'phone', 'password', 'confirmPassword'].map((field) => (
+            {['name', 'email', 'phone', 'password', 'confirmPassword'].map(field => (
               <div className="input-group" key={field}>
                 <input
-                  type={field.includes('password') ? 'password' : field === 'email' ? 'email' : 'text'}
+                  type={
+                    field.includes('password') ? 'password' :
+                    field === 'email' ? 'email' : 'text'
+                  }
                   name={field}
                   value={formData[field]}
                   onChange={handleChange}
                   placeholder={
-                    field === 'confirmPassword' ? 'Confirm Password' : field.charAt(0).toUpperCase() + field.slice(1)
+                    field === 'confirmPassword' ? 'Confirm Password' :
+                    field.charAt(0).toUpperCase() + field.slice(1)
                   }
                   className={errors[field] ? 'is-invalid' : ''}
+                  autoComplete="off"
                 />
                 {errors[field] && <div className="error">{errors[field]}</div>}
               </div>
             ))}
+
             <button type="submit" className="submit-btn" disabled={loading}>
               {loading ? 'Submitting...' : 'SUBMIT'}
             </button>
@@ -133,6 +141,7 @@ export default function Register() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="6-digit OTP"
+                  disabled={loading}
                   className={errorMsg ? 'is-invalid' : ''}
                 />
                 {errorMsg && <div className="error">{errorMsg}</div>}
