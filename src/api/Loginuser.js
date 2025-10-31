@@ -6,7 +6,9 @@ const loginUser = async (email, password) => {
   try {
     const response = await fetch(`${BASE_URL}/api/auth/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         email: email.trim(),
         password: password.trim()
@@ -17,6 +19,7 @@ const loginUser = async (email, password) => {
     const data = contentType?.includes('application/json') ? await response.json() : null;
 
     if (!response.ok) {
+      console.error('❌ loginUser failed:', data?.message || 'Login failed');
       return {
         success: false,
         message: data?.message || 'Login failed'
@@ -28,6 +31,7 @@ const loginUser = async (email, password) => {
       ...data
     };
   } catch (err) {
+    console.error('❌ loginUser error:', err.message);
     return {
       success: false,
       message: 'Unable to connect to server'
@@ -36,4 +40,3 @@ const loginUser = async (email, password) => {
 };
 
 export default loginUser;
-

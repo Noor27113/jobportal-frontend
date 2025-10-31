@@ -1,7 +1,6 @@
 // /src/api/registerUser.js
 
 import { BASE_URL } from '../config';
-const BASE_URL = 'https://jobportal-backend-production-de8e.up.railway.app'; // Replace with your actual Railway backend URL
 
 const registerUser = async (name, email, phone, password) => {
   try {
@@ -30,6 +29,7 @@ const registerUser = async (name, email, phone, password) => {
       success: true
     };
   } catch (err) {
+    console.error('❌ registerUser error:', err.message);
     return {
       success: false,
       message: 'Unable to connect to server'

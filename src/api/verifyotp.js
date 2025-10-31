@@ -1,7 +1,6 @@
-// /src/api/verifyOtp.js
-import { BASE_URL } from '../config';
+// src/api/verifyotp.js
 
-const BASE_URL = 'https://jobportal-backend-production-de8e.up.railway.app'; // Replace with your actual Railway backend URL
+import { BASE_URL } from '../config';
 
 const verifyOtp = async (email, otp) => {
   try {
@@ -10,33 +9,18 @@ const verifyOtp = async (email, otp) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        email: email.trim(),
-        otp: otp.trim()
-      })
+      body: JSON.stringify({ email, otp })
     });
 
-    const contentType = response.headers.get('content-type');
-    const result = contentType?.includes('application/json') ? await response.json() : null;
-
     if (!response.ok) {
-      console.warn('❌ OTP verification failed:', result?.message || 'Unknown error');
-      return {
-        success: false,
-        message: result?.message || 'OTP verification failed'
-      };
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'OTP verification failed');
     }
 
-    return {
-      success: true,
-      ...result
-    };
-  } catch (error) {
-    console.error('❌ Network or server error during OTP verification:', error.message);
-    return {
-      success: false,
-      message: 'Unable to connect to server'
-    };
+    return await response.json();
+  } catch (err) {
+    console.error('❌ verifyOtp error:', err.message);
+    throw err;
   }
 };
 
