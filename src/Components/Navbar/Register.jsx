@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import user from '../../assets/user.svg';
-import registerUser from '../../api/registerUser';
+import registerUser from '../../api/Registeruser';
+
 import verifyOtp from '../../api/verifyotp';
 
 export default function Register() {
