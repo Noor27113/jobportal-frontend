@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from './config'; // ✅ BASE_URL = 'https://jobportal-backend-production-de8e.up.railway.app'
+import { BASE_URL } from '../config'; // ✅ BASE_URL = 'https://jobportal-backend-production-de8e.up.railway.app'
 
 export default async function registerUser(name, email, phone, password) {
   try {
