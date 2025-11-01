@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { BASE_URL } from './config'; // Make sure config.js exports BASE_URL correctly
+import { BASE_URL } from './config'; // ✅ BASE_URL = 'https://jobportal-backend-production-de8e.up.railway.app'
 
 export default async function registerUser(name, email, phone, password) {
   try {
+    console.log('📡 BASE_URL at runtime:', BASE_URL); // ✅ Runtime check
+
     const response = await axios.post(`${BASE_URL}/api/auth/register`, {
       name,
       email,
